@@ -1,8 +1,7 @@
 import serial
 import time
-import sys
 
-port = 'COM4'  # Replace with your actual port
+port = 'COM12'  # Replace with your actual port
 baud_rate = 9600
 
 def connect_serial(port, baud_rate, retries=10):
@@ -24,14 +23,17 @@ try:
     ser = connect_serial(port, baud_rate)
 
     while True:
-        # Send data to Arduino
-        message = "Hello Arduino\n"
-        ser.write(message.encode())
-        print(f"Sent: {message.strip()}")
+        x = 10
+        y = 30
+        servo1_angle = 90
+        servo2_angle = 90
+        servo3_angle = 110
+        command = f"{servo1_angle}, {servo2_angle}, {servo3_angle}, {x}, {y}\n"
+        ser.write(command.encode())
+        print(f"Verzonden: {command.strip()}")
 
         # Wait for a response
         time.sleep(1)
-        
         if ser.in_waiting > 0:
             response = ser.readline().decode('utf-8').strip()
             print(f"Arduino: {response}")
