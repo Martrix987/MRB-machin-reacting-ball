@@ -34,7 +34,7 @@ if __name__ == "__main__":
     if ser:
         while True:
             # Send data to Arduino
-            message = "x:15/y:16/x:55/y:56\n"
+            message = "x:12/y:12/x:20/y:22\n"
             ser.write(message.encode())
             print(f"Sent: {message.strip()}")
             time.sleep(1)  # Adjust this delay as needed
