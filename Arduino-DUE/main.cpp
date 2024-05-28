@@ -19,7 +19,7 @@ unsigned long lastTime;
 
 void setup() {
   Serial.begin(115200); // Start serial communication
-  servo1.attach(9); // Attach the servos to their respective pins
+  servo1.attach(9); 
   servo2.attach(10);
   servo3.attach(11);
 
