@@ -19,9 +19,14 @@ unsigned long lastTime;
 
 void setup() {
   Serial.begin(115200); // Start serial communication
-  servo1.attach(9); // Attach the servos to their respective pins
-  servo2.attach(10);
+  servo1.attach(10); 
+  servo2.attach(9);
   servo3.attach(11);
+
+  // Initialize servos to 90 degrees (resting position)
+  servo1.write(90);
+  servo2.write(90);
+  servo3.write(90);
 
   lastTime = millis(); // Initialize lastTime for PID calculations
 }
@@ -75,13 +80,13 @@ void PIDControl(int destX, int destY, int ballX, int ballY) {
 
 void updateServos(float outputX, float outputY) {
   // Calculate the servo positions based on the PID outputs
-  // These calculations will depend on the specific geometry of your setup
+  // These calculations will need to be adjusted based on your setup
   // Here, we assume a simple linear relationship between the output and the servo position
 
   // Example calculations (these will need to be adjusted based on your setup)
-  int servoPos1 = constrain(map(outputY + outputX, -100, 100, 0, 180), 0, 180); // Top right
-  int servoPos2 = constrain(map(outputY - outputX, -100, 100, 0, 180), 0, 180); // Top left
-  int servoPos3 = constrain(map(-outputY, -100, 100, 0, 180), 0, 180); // Middle bottom
+  int servoPos1 = constrain(map(outputY + outputX, -100, 100, 90, 120), 90, 120); // Top right
+  int servoPos2 = constrain(map(outputY - outputX, -100, 100, 90, 120), 90, 120); // Top left
+  int servoPos3 = constrain(map(-outputY, -100, 100, 90, 120), 90, 120); // Middle bottom
 
   // Update the servo positions
   servo1.write(servoPos1);
