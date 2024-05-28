@@ -2,20 +2,20 @@ import serial
 import time
 import sys
 
-port = 'COM14'  # Replace with your actual port
+port = 'COM14'  
 baud_rate = 115200
 
 def connect_serial(port, baud_rate, retries=50):
     for i in range(retries):
         try:
             ser = serial.Serial(port, baud_rate, timeout=1)
-            time.sleep(1)  # Wait for the connection to establish
+            time.sleep(1)  
             print(f"Connected to {port} at {baud_rate} baud rate")
             return ser
         except serial.SerialException as e:
             print(f"Attempt {i+1}: Error connecting to {port}: {e}")
             if i < retries - 1:
-                time.sleep(0.1)  # Wait before retrying
+                time.sleep(0.1)  
             else:
                 raise
     return None
@@ -37,7 +37,7 @@ if __name__ == "__main__":
             message = "x:12/y:12/x:20/y:22\n"
             ser.write(message.encode())
             print(f"Sent: {message.strip()}")
-            time.sleep(1)  # Adjust this delay as needed
+            time.sleep(1)  
 
             # Receive and print data from Arduino
             receive_serial(ser)
