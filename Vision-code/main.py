@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-# Variabele voor het opslaan van de coördinaten van de muisklik
 click_coords = None
 
 def detect_squares(frame):
@@ -17,7 +16,7 @@ def detect_squares(frame):
         if len(approx) == 4 and cv2.isContourConvex(approx):
             (x, y, w, h) = cv2.boundingRect(approx)
             aspect_ratio = float(w) / h
-            if 0.9 <= aspect_ratio <= 1.1:  # Check if the contour is close to a square
+            if 0.9 <= aspect_ratio <= 1.1:
                 squares.append(approx)
 
     return squares
@@ -27,12 +26,9 @@ def mouse_callback(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         click_coords = (x, y)
 
-
-
 def main():
     global click_coords
-    # Start de videostream van de webcam
-    cap = cv2.VideoCapture(0)  # Hier 0 staat voor de index van de webcam. Als je meerdere webcams hebt, kun je een andere index gebruiken.
+    cap = cv2.VideoCapture(0)  
 
     if not cap.isOpened():
         print("Error: Could not open video stream.")
@@ -53,20 +49,23 @@ def main():
         mask = cv2.inRange(hsv, lower_green, upper_green)
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         squares = detect_squares(frame)
+
         if squares:
             square = squares[0]
             startpoint = square[0][0]
-        
+
+        object_coords = None
         if contours:
             largest_contour = max(contours, key=cv2.contourArea)
             M = cv2.moments(largest_contour)
             if M["m00"] != 0:
                 cX = int(M["m10"] / M["m00"]) - startpoint[0]
                 cY = int(M["m01"] / M["m00"]) - startpoint[1]
+                object_coords = (cX, cY)
             else:
-                cX, cY = 0, 0
-            cv2.circle(frame, (cX, cY), 7, (0, 255, 0), -1)
-            cv2.putText(frame, f'({cX}, {cY})', (cX - 20, cY - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                object_coords = (0, 0)
+            cv2.circle(frame, object_coords, 7, (0, 255, 0), -1)
+            cv2.putText(frame, f'({object_coords[0]}, {object_coords[1]})', (object_coords[0] - 20, object_coords[1] - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
         # Square detection code
         if squares:
@@ -81,7 +80,10 @@ def main():
                     local_x = click_coords[0] - top_left[0]
                     local_y = click_coords[1] - top_left[1]
                     cv2.circle(frame, click_coords, 5, (0, 0, 255), -1)
-                    cv2.putText(frame, f"({local_x},{local_y})" ,click_coords, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                    cv2.putText(frame, f"({local_x},{local_y})", click_coords, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                    if object_coords:
+                        coords_string = f"x:{local_x}/y:{local_y}/x:{object_coords[0]}/y:{object_coords[1]}\n"
+                        print(coords_string)
 
         cv2.imshow('Object Tracking and Square Detection', frame)
 
