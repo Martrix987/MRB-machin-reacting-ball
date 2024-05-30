@@ -19,7 +19,7 @@ float integralY = 0;
 unsigned long lastTime;
 
 void setup() {
-  Serial.begin(115200); // Start serial communication
+  Serial.begin(115200); 
   servo1.attach(10); 
   servo2.attach(9);
   servo3.attach(11);
@@ -29,7 +29,8 @@ void setup() {
   servo2.write(90);
   servo3.write(90);
 
-  lastTime = millis(); // Initialize lastTime for PID calculations
+  // Initialize lastTime for PID calculations
+  lastTime = millis(); 
 }
 
 // Coords format
@@ -81,10 +82,6 @@ void PIDControl(int destX, int destY, int ballX, int ballY) {
 
 void updateServos(float outputX, float outputY) {
   // Calculate the servo positions based on the PID outputs
-  // These calculations will need to be adjusted based on your setup
-  // Here, we assume a simple linear relationship between the output and the servo position
-
-  // Example calculations (these will need to be adjusted based on your setup)
   int servoPos1 = constrain(map(outputY + outputX, -100, 100, 90, 120), 90, 120); // Top right
   int servoPos2 = constrain(map(outputY - outputX, -100, 100, 90, 120), 90, 120); // Top left
   int servoPos3 = constrain(map(-outputY, -100, 100, 90, 120), 90, 120); // Middle bottom
@@ -97,9 +94,9 @@ void updateServos(float outputX, float outputY) {
 
 void loop() {
   if (Serial.available() > 0) {
-    String received = Serial.readStringUntil('\n'); // Read the incoming data until newline character
+    String received = Serial.readStringUntil('\n'); 
     Serial.print("Raw received: ");
-    Serial.println(received); // Debugging: Print the raw received string
+    Serial.println(received); 
 
     int destX = 0, destY = 0, ballX = 0, ballY = 0;
     parseCoordinates(received, destX, destY, ballX, ballY);
